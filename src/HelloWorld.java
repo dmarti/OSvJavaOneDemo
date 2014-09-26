@@ -7,9 +7,9 @@ public class HelloWorld {
     	while(true) {
         	System.out.println("Hello World.");
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(800);
 		}	catch(InterruptedException ex) {
-			Thread.currentThread().interrupt();
+			// ignore
 		}
 	}
     }
