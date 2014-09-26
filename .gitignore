@@ -1,3 +1,6 @@
+Capstanfile
+*.qcow2
+
 *.class
 
 # Mobile Tools for Java (J2ME)

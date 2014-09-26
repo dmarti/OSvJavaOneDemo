@@ -1,0 +1,47 @@
+<project>
+
+    <target name="clean">
+        <delete dir="build"/>
+	<delete file="HelloWorld.qcow2"/>
+	<delete file="Capstanfile"/>
+    </target>
+
+    <property name="jarname" value="HelloWorld.jar"/>
+    <property name="hypervisor" value="qemu"/>
+
+    <basename property="vm-name" file="${basedir}"/>
+
+    <target name="compile">
+        <mkdir dir="build/classes"/>
+        <javac includeantruntime="false" srcdir="src" destdir="build/classes"/>
+    </target>
+
+    <target name="jar" depends="compile">
+        <mkdir dir="build/jar"/>
+        <jar destfile="build/jar/${jarname}" basedir="build/classes">
+            <manifest>
+                <attribute name="Main-Class" value="osv.HelloWorld"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="vm" depends="jar">
+        <echo file="Capstanfile" append="false">base: cloudius/osv-openjdk
+cmdline:
+  /java.so -jar ${jarname}
+files:
+  /${jarname}: build/jar/${jarname}</echo>
+        <exec executable="capstan">
+            <arg value="build"/>
+            <arg value="-v"/>
+        </exec>
+        <copy tofile="HelloWorld.qcow2" file="${user.home}/.capstan/instances/${hypervisor}/${vm-name}/disk.qcow2"/>
+    </target>
+
+    <target name="vmrun">
+        <exec executable="capstan">
+            <arg value="run"/>
+            <arg value="${vm-name}"/>
+        </exec>
+    </target>
+</project>
