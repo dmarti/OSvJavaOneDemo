@@ -1,15 +1,15 @@
 <project>
 
-    <target name="clean">
-        <delete dir="build"/>
-	<delete file="HelloWorld.qcow2"/>
-	<delete file="Capstanfile"/>
-    </target>
-
     <property name="jarname" value="HelloWorld.jar"/>
     <property name="hypervisor" value="qemu"/>
-
     <basename property="vm-name" file="${basedir}"/>
+    <property name="capstanpath"
+        value="${user.home}/.capstan/repository/${vm-name}"/>
+
+    <target name="clean">
+        <delete dir="build"/>
+        <delete file="HelloWorld.${hypervisor}"/>
+    </target>
 
     <target name="compile">
         <mkdir dir="build/classes"/>
@@ -26,16 +26,21 @@
     </target>
 
     <target name="vm" depends="jar">
-        <echo file="Capstanfile" append="false">base: cloudius/osv-openjdk
+        <echo file="Capstanfile" append="false">
+base:
+  cloudius/osv-openjdk
 cmdline:
   /java.so -jar ${jarname}
 files:
   /${jarname}: build/jar/${jarname}</echo>
         <exec executable="capstan">
             <arg value="build"/>
-            <arg value="-v"/>
+            <arg value="-p"/>
+            <arg value="${hypervisor}"/>
         </exec>
-        <copy tofile="HelloWorld.qcow2" file="${user.home}/.capstan/instances/${hypervisor}/${vm-name}/disk.qcow2"/>
+        <copy tofile="HelloWorld.${hypervisor}"
+            file="${capstanpath}/${vm-name}.${hypervisor}"/>
+        <delete file="Capstanfile"/>
     </target>
 
     <target name="vmrun">
