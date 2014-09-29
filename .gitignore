@@ -1,5 +1,6 @@
 Capstanfile
 *.qcow2
+*.qemu
 
 *.class
 

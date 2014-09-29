@@ -5,9 +5,9 @@ import java.lang.*;
 public class HelloWorld {
     public static void main(String[] args) {
     	while(true) {
-        	System.out.println("Hello World.");
+        	System.out.println("Hello World.                            ");
 		try {
-			Thread.sleep(800);
+			Thread.sleep(60000);
 		}	catch(InterruptedException ex) {
 			// ignore
 		}
